@@ -2301,4 +2301,114 @@ b_ = Ai()
 a_.ask()
 b_.ask()
 
+# Задание 3.2.5
+# Задание на самопроверку.
+#
+# Создать класс Square. Добавить в конструктор класса Square собственное исключение NonPositiveDigitException,
+# унаследованное от ValueError, которое будет срабатывать каждый раз, когда сторона квадрата меньше или равна 0.
+
+class NonPositiveDigitalException(ValueError):
+    # print('Сторона квадрата должна быть больше нуля')
+    pass
+
+class Square:
+    def __init__(self, a):
+         if a <= 0:
+             # self.a = None
+             raise NonPositiveDigitalException('Сторона квадрата должна быть больше нуля')
+
+    @classmethod
+    def get_name(cls):
+        return cls.__name__
+
+    def __repr__(self):
+        return f'Square: {self.a}'
+
+square_1 = Square(-1)
+# print(square_1.get_name())
+# square_1.a = 1
+# print(square_1)
+# del square_1
+
+
+
+class ParentException(Exception):
+    def __init__(self, message, error):
+        super().__init__(message)
+        print(f'Errors: {error}')
+
+
+class NonPositiveDigitalException(ParentException):
+    def __init__(self, message, error):
+        super().__init__(message, error)
+
+
+class Square:
+    def __init__(self, a):
+        try:
+            if a <= 0:
+              self.a = None
+              raise NonPositiveDigitalException("Какой то message", "какой то error")
+        except ParentException as e:
+            print(e)
+
+    @classmethod
+    def get_name(cls):
+        return cls.__name__
+
+    def __repr__(self):
+        return f'Square: {self.a}'
+
+square_1 = Square(-1)
+
+from os import *
+import math
+import time
+
+# Задание 3.3.5
+# Поэкспериментируйте с модулем time. Выведите в консоль текущее время, попробуйте вывести следующие данные:
+#
+# только время;
+# только минуты;
+# только дату;
+# только месяц.
+
+# print(math.trunc(math.fmod(math.fabs(-10000000), 55)+0.3))
+# print(getcwd())
+#print(os.listdir())
+
+print(time.strftime("%H:%M:%S", time.localtime()))
+print(time.strftime("%M", time.localtime()))
+print(time.strftime("%x", time.localtime()))
+print(time.strftime("%B", time.localtime()))
+
+i = 10
+while i > -1:
+    print(i)
+    time.sleep(1)
+    i -= 1
+print('Время вышло')
+import mylibrary
+
+
+def main():
+
+    r = int(input('Введите радиус : '))
+    a = int(input('Введите сторону a : '))
+    b = int(input('Введите сторону b : '))
+
+    if mylibrary.area_circle(r) > mylibrary.area_square(a, b):
+        print("Площадь круга больше площади квадрата")
+    elif mylibrary.area_circle(r) < mylibrary.area_square(a, b):
+        print("Площадь круга меньше площади квадрата")
+    else:
+        print("площади равны")
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
 
