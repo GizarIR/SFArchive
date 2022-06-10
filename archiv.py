@@ -2407,6 +2407,152 @@ def main():
 if __name__ == "__main__":
     main()
 
+# Задание 3.4.3
+# Задание на самопроверку.
+#
+# Сделайте функцию, которая принимает от пользователя путь и выводит всю информацию
+# о содержимом этой папки. Для реализации используйте функцию встроенного модуля os.walk().
+# Если путь не указан, то сравнение начинается с текущей директории.
+
+import os
+# from os.path import join
+
+def get_folder(path):
+    start_path = path if path != "" else os.getcwd()
+
+    for root, dirs, files in os.walk(start_path):
+        print("Текущая директория: ", root)
+        print("----------------------")
+
+        if dirs:
+            print("Список папок: ", dirs)
+        else:
+            print("Список папок пуст")
+        print("----------------------")
+
+        if files:
+            print('Список файлов: ', files)
+        else:
+            print("Список файлов пуст")
+        print("----------------------")
+
+        print("Все пути:")
+        for f in files:
+            print("Файл:", os.path.join(root, f))
+
+        for d in dirs:
+            print('Папка:', os.path.join(root, d))
+        print("========================")
+
+# Press the green button in the gutter to run the script.
+if __name__ == '__main__':
+    path = input('Введите путь к каталогу: \n')
+    get_folder(path)
+
+
+# Задание 3.4.4
+# Задание на самопроверку.
+#
+# Создайте любой файл на операционной системе под название input.txt и построчно перепишите его в файл output.txt.
+with open('test.txt', 'r') as f_in:
+    with open('output.txt','w') as f_out:
+        for line in f_in:
+            f_out.writelines(line)
+
+# Задание 3.4.5
+# Задание на самопроверку.
+#
+# Дан файл numbers.txt, компоненты которого являются действительными числами
+# (файл создайте самостоятельно и заполните любыми числам, в одной строке одно число).
+# Найдите сумму наибольшего и наименьшего из значений и запишите результат в файл output.txt.
+
+with open('numbers.txt', 'r') as f_num:
+    with open('output.txt', 'w') as f_out:
+        l_ = list(map(lambda x: int(x.strip()), f_num.readlines()))
+        f_out.writelines(str(min(l_) + max(l_)))
+        f_out.writelines('\n')
+
+# вариант который бережет память
+filename = 'numbers.txt'
+output = 'output.txt'
+
+with open(filename) as f:
+   min_ = max_ = float(f.readline())  # считали первое число
+   for line in f:
+       num =  float(line)
+       if num > max_:
+           max_ = num
+       elif num < min_:
+           min_ = num
+
+   sum_ = min_ + max_
+
+with open(output, 'w') as f:
+   f.write(str(sum_))
+   f.write('\n')
+
+# Задание 3.4.6
+# Задание на самопроверку.
+#
+# В текстовый файл построчно записаны фамилии и имена учащихся класса и их оценки за контрольную.
+# Выведите на экран всех учащихся, чья оценка меньше 3 баллов. Cодержание файла:
+
+with open('students.txt', 'r') as f_in:
+    for line in f_in:
+        if int(line.split()[-1]) < 3:
+            print(line, end='')
+
+
+# Задание 3.4.7
+# Задание на самопроверку.
+#
+# Выполните реверсирование строк файла (перестановка строк файла в обратном порядке).
+with open('string_in.txt', 'r') as f_in:
+    with open('output.txt', 'w') as f_out:
+        for line in reversed(f_in.readlines()):
+            f_out.writelines(line)
+
+
+# Задание 3.5.6
+# Напишите контекстный менеджер, который умеет безопасно работать с файлами.
+#
+# В конструктор объекта контекстного менеджера передаются два аргумента: первый — путь к
+# файлу, который надо открыть, второй — тип открываемого файла (для записи, для чтения и т. д.).
+# При входе в контекстный менеджер должен открываться файл, и возвращаться объект для работы с этим файлом.
+# При выходе из контекстного менеджера файл должен закрываться.
+# (Эталоном работы можно считать контекстный менеджер open).
+
+class OpenFile:
+    def __init__(self, path, mode):
+        self.path = path
+        self.mode = mode
+        self.openned_file = None
+
+    def __enter__(self):
+        self.openned_file = open(self.path, self.mode)
+        return self.openned_file
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.openned_file.close()
+
+with OpenFile('test.txt', 'a') as f:
+    f.writelines('123\n')
+
+# вариант 2 короче
+class OpenFile_2:
+    def __init__(self, path, type):
+        self.file = open(path, type)
+
+    def __enter__(self):
+        return self.file
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.file.close()
+
+
+
+with OpenFile_2('test.txt', 'a') as f:
+    f.writelines('567\n')
 
 
 
