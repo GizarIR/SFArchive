@@ -2554,6 +2554,184 @@ class OpenFile_2:
 with OpenFile_2('test.txt', 'a') as f:
     f.writelines('567\n')
 
+# 4. В коде задан список А. Выведите сумму элементов списка с индексами, кратными 3.
+a = [1, 2, 3, 4, 5, 6, 7]
+print(a)
+
+s = sum([elem for i, elem in enumerate(a) if i % 3 == 0])
+
+print(s)
+
+print(sum(a[::3]))
+# 5. В коде задан список А. Циклически сдвиньте элементы списка вправо.
+
+first = a.pop(-1)
+a.insert(0, first)
+print(a)
+
+n = -1 # количество сдвигов если n меньше длины списка
+b = a[:n] + a[n:]
+print(b)
+
+# 6. В коде задан спиоск А. Найдите второй и тертий минимумы этого списка.
+b = a.copy()
+print(sorted(set(a))[1], sorted(set(a))[2])
+# или
+first_min = b.pop(b.index(min(b)))
+
+second_min = min(b)
+b.remove(min(b))
+print(second_min)
+
+third_min = min(b)
+b.remove(min(b))
+print(third_min)
+
+# 7. Сначала пользователь вводит число n с клавиатуры. После с новой строки он вводит число в n-ичной системе счисления.
+# Нужно вывести это число в десятичной системе.
+# sdfdgjsdf в n= 7 меричном исчеслении это k
+# k = f*n**0 + d*n**1+ s*n**3...s*n**6 (где ** степень)
+# для N < 10
+s = "1234567"
+n = 7
+ans = 0
+for i in range(len(s) - 1):
+    ans += int(s[-i]) * n ** i
+
+print(ans)
+
+# int может переводить в N ичное число
+
+n = 7
+s_ = "1234567"
+ans_ = int(s_, 12)
+
+
+print(ans_)
+
+# 8. В коде задан список А, который состоит из списков. Нужно в переменной В получить список,
+# который получается в результате склеивания списков из А.
+A = [[1, 2],[3, 4, 5],[6, 7, 8, 9]]
+B =[]
+for elem in A:
+    for i in elem:
+        B.append(i)
+
+B = []
+for elem in A:
+    B.extend(elem)
+
+B = []
+for elem in A:
+    B += elem
+
+B = []
+B = sum(A, [])
+
+print(B)
+
+
+# 9. В коде задана переменная text с текстом. Нужно подсчитать для этого текста статистику: сколько раз какой символ
+# в этом тексте встретился.
+# вар 1
+text = "Нужно подсчитать для этого текста статистику: сколько раз какой символ в этом тексте встретился."
+
+unique_text = set(text)
+
+for s in unique_text:
+    symbol_count = text.count(s)
+    print(f'{s} - {symbol_count}')
+
+# вар 2
+stat = {}
+for s in text:
+    if s in stat:
+        stat[s] += 1
+    else:
+        stat[s] = 1
+
+for s, count_s in stat.items():
+    print(f'Символ {s} встречается {count_s} раз')
+
+# вар 3
+from collections import Counter
+
+stat = Counter(text)
+for s, count_s in stat.items():
+    print(f'Символ {s} встречается {count_s} раз')
+
+
+
+
+
+# 10. Пользователь вводит число n. Нужно вывести, является ли число простым.
+# Чтобы понять является ли число простым (делиться на 1 и на самою себя) достаточно перебирать делением не все
+# числа от 2 до N-1 а достаточно от 2 до SQRT(N) (квадратный корень)
+n = 23
+is_prime = True
+for i in range(2, n):
+    if n % i == 0:
+        is_prime = False
+        print(i)
+if is_prime:
+    print(f"Число {n} - простое")
+else:
+    print(f"Число {n} - НЕ простое")
+
+
+#вар 2
+n = 23
+is_prime = True
+div = 2
+while div**2 < n:
+    if n % div == 0:
+        is_prime = False
+        print(i)
+    div += 1
+if is_prime:
+    print(f"Число {n} - простое")
+else:
+    print(f"Число {n} - НЕ простое")
+
+
+# 11. Пользователь вводит в консоль строку. Удалите в этой строке каждое второе слово.
+str_1 = "123 456 123 456"
+print(" ".join(str_1.split()[::2]))
+
+# как удалить все знаки пунктуации из предложенияю в модуле string есть объект punctuation,
+# который сожержит полный перечень знаков пунктуации (без пробелов). Метод стрип удаляет из строки знаки пунктуации
+import string
+c = "Строка в котройо есть несколько слов (!) "
+words = c.split()
+words = [i.strip(string.punctuation) for i in words]
+# очистим пустые строки
+words = [word for word in words if word]
+
+print(words)
+
+
+
+# 12. Пользователь вводит в консоль целое число. Нужно вывести запись этого числа в двоичной системе счисления.
+# используем алгоритм деления на 2 (деление для любого типа числа одинаково)
+number = 123
+ans = ""
+while number:
+    if number % 2 == 0:
+        ans = "0" + ans
+    else:
+        ans = "1" + ans
+    number = number // 2
+
+print(ans)
+
+# вариант 2
+number = 123
+
+ans = bin(number)
+print(ans)
+print(ans[2:])
+
+
 
 
 
