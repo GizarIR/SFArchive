@@ -3353,3 +3353,184 @@ LL.popleft()
 print(LL)
 print(len(LL))
 
+
+# Линейный поиск
+def find(array, element):
+    for i, a in enumerate(array):
+        if a == element:
+            return i
+    return False
+
+# array = list(map(int, input().split()))
+# element = int(input())
+
+array = [1, 3, 5, 6, 8, 3, 5, 32]
+element = 3
+
+print(find(array, element))
+
+# подсчет вхождений элементов
+
+def count(array, element):
+    count_ = 0
+    for a in array:
+        if a == element:
+            count_ += 1
+    return count_
+
+print(count(array, element))
+
+
+# двоичный поиск
+
+def binary_search(array, element, left, right):
+    if left > right:  # если левая граница превысила правую,
+        return False  # значит элемент отсутствует
+
+    middle = (right + left) // 2  # находим середину
+    if array[middle] == element:  # если элемент в середине,
+        return middle  # возвращаем этот индекс
+    elif element < array[middle]:  # если элемент меньше элемента в середине
+        # рекурсивно ищем в левой половине
+        return binary_search(array, element, left, middle - 1)
+    else:  # иначе в правой
+        return binary_search(array, element, middle + 1, right)
+
+
+element = 3 #int(input())
+array = [i for i in range(1, 100)]  # 1,2,3,4,...
+
+# запускаем алгоритм на левой и правой границе
+print(binary_search(array, element, 0, 98))
+
+# Двоичное (бинарное)  дерево поиска
+class BinarySearchTree:
+    def __init__(self, value):
+        self.value = value
+        self.left_child = None
+        self.right_child = None
+
+    def __str__(self):  # печать с помощью обхода в ширину
+        queue = [self]  # создаем очередь
+        values = []  # значения в порядке обхода в ширину
+        while queue != []:  # пока она не пустая
+            last = queue.pop(0) # извлекаем из начала
+            if last is not None:  # если не None
+                values.append("%d" % last.value)  # добавляем значение
+                queue.append(last.left_child) # добавляем левого потомка
+                queue.append(last.right_child) # добавляем правого потомка
+            return ''.join(values)
+
+    # поиск по ключу x
+    def search(self, x):
+        if self.value == x: #если нашли элемент
+            return self # возвращаем ссылку на узел
+        elif x < self.value: # или, если значение меньше того что мы ищем, продолжаем
+            return self.left_child.search(x) # поиск в левом дереве
+        elif x > self.value: # иначе в правом
+            return self.right_child.search(x)
+        else: # если ненашлось возвращаем False
+            return False
+
+    # поиск минимума
+    def minimum(self):
+        if self.left_child is None:
+            return self
+        else:
+            return self.left_child.minimum()
+
+    # поиск максимума
+    def maximum(self):
+        if self.right_child is None:
+            return self
+        else:
+            return self.right_child.maximum()
+
+    # поиск следующего элемента
+    def next_value(self):
+        current = self
+        successor = None
+        while current is not None:
+            if current.value > x:
+                successor = current
+                current = current.left_child
+            else:
+                current = current.right_child
+        return successor
+
+    # поиск предыдущего элемента
+    def prev_value(self):
+        current = self
+        successor = None
+        while current is not None:
+            if current.value < x:
+                successor = current
+                current = current.right_child
+            else:
+                current = current.left_child
+        return successor
+
+    def insert(self, x):
+        if x > self.value: # идем в правое поддерево
+            if self.right_child is not None: # если оно существует,
+                self.right_child.insert(x) # делаем рекурсивный вызов
+            else: # иначе создаем правого потомка
+                self.right_child = BinarySearchTree(x)
+        else: # иначе в левое поддерево и делаем аналогичные действия
+            if self.left_child is not None:
+                self.left_child.insert(x)
+            else:
+                self.left_child = BinarySearchTree(x)
+        return self # возвращаем корень
+
+    def delete(self, x): # первым этапом мы должны найти удаляемый узел и его предка
+        parent = self
+        node = self
+        if not self.search(x):
+            return self
+        while node.value != x:
+            parent = node
+            if parent.left_child is not None and x < parent.value:
+                node = parent.left_child
+            elif parent.right_child is not None and x > parent.value:
+                node = parent.right_child
+        # по завершении в node хранится искомый узел
+
+        # первый случай - если лист
+        if node.left_child is None and node.right_child is None:
+            if parent.left_child is node:
+                parent.left_child = None
+            if parent.right_child is node:
+                parent.right_child = None
+            if parent.value == x:
+                # если нет листов и parent==node до сих пор,
+                # значит, нужно вернуть None для корректной работы рекурсии
+                return None
+        # второй случай - имеет одного потомка
+        elif node.left_child is None or node.right_child is None:
+            if node.left_child is not None:
+                if parent.left_child is node:
+                    parent.left_child = node.left_child
+                elif parent.right_child is node:
+                    parent.right_child = node.left_child
+            if node.right_child is not None:
+                if parent.left_child is node:
+                    parent.left_child = node.right_child
+                elif parent.right_child is node:
+                    parent.right_child = node.right_child
+        else:
+            # третий случай - имеет двух потомков
+            next_ = node.next_value(x).value # ищем следующее значение
+            node.value = next_ # меняем на него
+            # делаем рекурсивный вызов
+            node.right_child = node.right_child.delete(next_)
+        return self
+# Drive cod
+BinSTree_1 = BinarySearchTree(25)
+BinSTree_1.insert(10)
+BinSTree_1.insert(15)
+BinSTree_1.insert(37)
+BinSTree_1.insert(30)
+BinSTree_1.insert(65)
+print(BinSTree_1)
+
