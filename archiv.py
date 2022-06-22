@@ -3113,3 +3113,128 @@ while pointer is not None:
 path.reverse()
 for v in path:
     print(v)
+
+
+# Бинарные деревья
+# Описываем через классы
+
+class BinaryTree:
+    def __init__(self, value):
+        self.value = value
+        self.left_child = None
+        self.right_child = None
+
+    # вставка левого потомка
+    def insert_left(self, next_value):
+        if self.left_child is None:
+            self.left_child = BinaryTree(next_value)
+        else:
+            new_child = BinaryTree(next_value)
+            new_child.left_child = self.left_child
+            self.left_child = new_child
+        return self
+
+    # вставка правого потомка
+    def insert_right(self, next_value):
+        if self.right_child is None:
+            self.right_child = BinaryTree(next_value)
+        else:
+            new_child = BinaryTree(next_value)
+            new_child.right_child = self.right_child
+            self.right_child = new_child
+        return self
+
+    #обход дерева в глубину - префиксный способом pre-order
+    def pre_order(self):
+        print(self.value)  # процедура обработки
+
+        if self.left_child is not None:  # если левый потомок существует
+            self.left_child.pre_order()  # рекурсивно вызываем функцию
+
+        if self.right_child is not None:  # если правый потомок существует
+            self.right_child.pre_order()  # рекурсивно вызываем функцию
+
+    #обход дерева в глубину - постфиксный способом post-order
+    def post_order(self):
+        if self.left_child is not None:  # если левый потомок существует
+            self.left_child.post_order()  # рекурсивно вызываем функцию
+
+        if self.right_child is not None:  # если правый потомок существует
+            self.right_child.post_order()  # рекурсивно вызываем функцию
+
+        print(self.value)  # процедура обработки
+
+    #обход дерева в глубину - инфиксный подход in-order
+    def in_order(self):
+        if self.left_child is not None:  # если левый потомок существует
+            self.left_child.in_order()  # рекурсивно вызываем функцию
+
+        print(self.value)  # процедура обработки
+
+        if self.right_child is not None:  # если правый потомок существует
+            self.right_child.in_order()  # рекурсивно вызываем функцию
+
+
+# создаем корень и его потомки /7|2|5\
+node_root = BinaryTree(2).insert_left(7).insert_right(5)
+# левое поддерево корня /2|7|6\
+node_7 = node_root.left_child.insert_left(2).insert_right(6)
+# правое поддерево предыдущего узла /5|6|11\
+node_6 = node_7.right_child.insert_left(5).insert_right(11)
+# правое поддерево корня /|5|9\
+node_5 = node_root.right_child.insert_right(9)
+# левое поддерево предыдущего узла корня /4|9|\
+node_9 = node_5.right_child.insert_left(4)
+
+print('Поиск в глубину')
+print('-----pre - order------')
+node_root.pre_order()
+print('-------post - order-------')
+node_root.post_order()
+print('-------in - order-------')
+node_root.in_order()
+
+#Поиск в глубину вариант 2 реализация
+#      A
+#    B   C
+#  D   E
+graph = {
+    'A' : ['B', 'C'],
+    'B' : ['D', 'E'],
+    'C' : [],
+    'D' : [],
+    'E' : []
+}
+
+visited = set()
+
+def dfs(visited, graph, node):
+    if node not in visited:
+        print (node, end=' ')
+        visited.add(node)
+        for neighbor in graph[node]:
+            dfs(visited, graph, neighbor)
+print('Поиск в глубину DFS')
+dfs(visited, graph, 'A')
+print('\n')
+
+# Поиск в ширину BFS
+visited = []
+queue = []
+
+
+def bfs(visited, graph, node):
+    visited.append(node)
+    queue.append(node)
+
+    while queue:
+        s = queue.pop(0)
+        print(s, end=" ")
+
+        for neighbor in graph[s]:
+            if neighbor not in visited:
+                visited.append(neighbor)
+                queue.append(neighbor)
+print("Поиск в ширину BFS")
+bfs(visited, graph, 'A')
+
