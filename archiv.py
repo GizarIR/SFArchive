@@ -3410,6 +3410,13 @@ class BinarySearchTree:
         self.left_child = None
         self.right_child = None
 
+# В переменной queue у нас находится очередь с вершинами для обхода. Начинаем мы обход с корня дерева.
+# То есть с вершины, которая находится в переменной self. Поэтому мы её добавляем первой в очереди.
+# дальше алгоритм обхода такой:
+# * Забираем вершину из очереди.
+# * Добавляем в очередь всех потомков этой вершины.
+# * Продолжаем обход и снова забираем новую вершину.
+
     def __str__(self):  # печать с помощью обхода в ширину
         queue = [self]  # создаем очередь
         values = []  # значения в порядке обхода в ширину
@@ -3419,7 +3426,7 @@ class BinarySearchTree:
                 values.append("%d" % last.value)  # добавляем значение
                 queue.append(last.left_child) # добавляем левого потомка
                 queue.append(last.right_child) # добавляем правого потомка
-            return ''.join(values)
+        return ' '.join(values)
 
     # поиск по ключу x
     def search(self, x):
@@ -3533,4 +3540,205 @@ BinSTree_1.insert(37)
 BinSTree_1.insert(30)
 BinSTree_1.insert(65)
 print(BinSTree_1)
+
+
+# Алгоритмы сортировки
+# Наивная сортировка
+import random
+
+array = [2, 3, 1, 4, 6, 5, 9, 8, 7]
+
+is_sort = False
+count = 0
+
+while not is_sort:
+    count += 1
+    random.shuffle(array)
+
+    is_sort = True
+    for i in range(len(array) - 1):
+        if array[i] > array[i + 1]:
+            is_sort = False
+            break
+
+print(array)
+print(count)
+# [1, 2, 3, 4, 5, 6, 7, 8, 9]
+# 285736
+
+# Небольшое отступление
+# n!= 1 * … * (n-2) * (n-1) * n,
+
+
+# Как посчитать факториал
+def fact(n):
+    if n == 0:
+        return 1
+    else:
+        return fact(n-1) * n
+
+print(fact(100))
+
+import math
+print(math.factorial(100))
+
+# Как посчитать количество цифр в натуральном числе
+def count_dig(n):
+    count = 0
+    while n != 0:
+        n //= 10
+        count += 1
+    return count
+
+print(count_dig(fact(100)))
+
+# Сортировка выбором по возрастанию и по убыванию
+array = [2, 3, 1, 4, 6, 5, 9, 8, 7]
+count = 0
+for i in range(len(array)):
+    idx_min = i
+    for j in range(i+1, len(array)):
+        if array[j] < array[idx_min]:
+            idx_min = j
+        count += 1
+        if i != idx_min:
+            array[i], array[idx_min] = array[idx_min], array[i]
+
+print(array)
+print(count)
+
+array = [2, 3, 1, 4, 6, 5, 9, 8, 7]
+count = 0
+for i in range(len(array)):
+    idx_min = i
+    for j in range(i+1, len(array)):
+        if array[j] > array[idx_min]:
+            idx_min = j
+        count += 1
+        if i != idx_min:
+            array[i], array[idx_min] = array[idx_min], array[i]
+
+print(array)
+print(count)
+
+
+# Метод сортировки пузырьком
+array = [2, 3, 1, 4, 6, 5, 9, 8, 7]
+
+for i in range(len(array)):
+    for j in range(len(array) - i - 1):
+        if array[j] > array[j + 1]:
+            array[j],  array[j + 1] = array[j + 1], array[j]
+
+print(array)
+
+# Сортировка вставками
+array = [2, 3, 1, 4, 6, 5, 9, 8, 7]
+
+for i in range(1, len(array)):
+    x = array[i]
+    idx = i
+    while idx > 0 and array[idx - 1] > x:
+        array[idx] = array[idx - 1]
+        idx -= 1
+    array[idx] = x
+print(array)
+
+# Сортировка вставками с подсчетом количества сравнений
+# Тут надо понимать, что оператор and лениво вычисляет операнды.
+# Если первый операнд ложный, то он не будет вычислять второй, потому
+# что уже известно, что результат операции and будет ложным.
+# Поэтому тут надо разделить выражения, например так:
+
+
+array = [2, 3, 1, 4, 6, 5, 9, 8, 7]
+cnt = 0
+for i in range(1, len(array)):
+    x = array[i]
+    idx = i
+    while idx > 0:
+        cnt += 1
+        if not(array[idx-1] > x):
+            break
+        array[idx] = array[idx-1]
+        idx -= 1
+    array[idx] = x
+
+
+print(array)
+print(cnt)
+
+
+# Сортировка слиянием
+
+a = [2, 3, 1, 4, 6, 5, 9, 8, 7]
+
+
+def merge_sort(L):  # «разделяй»
+    if len(L) < 2:  # если кусок массива равен 2,
+        return L[:]  # выходим из рекурсии
+    else:
+        middle = len(L) // 2  # ищем середину
+        left = merge_sort(L[:middle])  # рекурсивно делим левую часть
+        right = merge_sort(L[middle:])  # и правую
+        return merge(left, right)  # выполняем слияние
+
+
+def merge(left, right):  # «властвуй»
+    result = []  # результирующий массив
+    i, j = 0, 0  # указатели на элементы
+
+    # пока указатели не вышли за границы
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+
+    # добавляем хвосты
+    while i < len(left):
+        result.append(left[i])
+        i += 1
+
+    while j < len(right):
+        result.append(right[j])
+        j += 1
+
+    return result
+
+
+print(merge_sort(a))
+
+
+# Быстрая сортировка (с )
+import random
+a = [2, 3, 1, 4, 6, 5, 9, 8, 7]
+
+def qsort(array, left, right):
+    # middle = (left + right) // 2
+
+    # p = array[middle]
+    p = random.choice(array[left:right +  1])
+    i, j = left, right
+    while i <= j:
+        while array[i] < p:
+            i += 1
+        while array[j] > p:
+            j -= 1
+        if i <= j:
+            array[i], array[j] = array[j], array[i]
+            i += 1
+            j -= 1
+
+    if j > left:
+        qsort(array, left, j)
+    if right > i:
+        qsort(array, i, right)
+
+qsort(a, 0, len(a) - 1)
+print(a)
+
+
 
