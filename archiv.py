@@ -3740,5 +3740,94 @@ def qsort(array, left, right):
 qsort(a, 0, len(a) - 1)
 print(a)
 
+# Расчет редакционного расстояния с тестами
+import random
+import string
+import time
+
+def edit_distance(s1, s2):
+    m, n = len(s1), len(s2)
+    if m < n:
+        return edit_distance(s2, s1)
+
+    previous = list(range(n+1))
+
+    for i, char1 in enumerate(s1, 1):
+        current = [i]
+        for j, char2 in enumerate(s2, 1):
+            current.append(min(current[j-1] + 1,
+                                previous[j] + 1,
+                                previous[j-1] + (char1 != char2)))
+        previous = current
+
+    return previous[n]
+
+def main():
+    s1 = input()
+    s2 = input()
+    print(edit_distance(s1, s2))
+
+def test(n_iter = 100):
+    for i in range(n_iter):
+        length = random.randint(0, 64)
+        s = ''.join(random.choice(string.ascii_letters) for _ in range(length))
+        assert edit_distance(s, '') == edit_distance('', s) == len(s)
+        assert edit_distance(s, s) == 0
+    assert edit_distance('distance', 'editing') == 5
+    assert edit_distance('hello', 'mello') == 1
+
+if __name__ == '__main__':
+    for i in range(10):
+        start = time.time()
+        test(1000)
+        end = time.time()
+        print(end-start)
+
+
+import requests
+import json
+
+пример 1
+r = requests.get('https://baconipsum.com/api/?type=all-meat&paras=3&start-with-lorem=1&format=html')
+print(r.content)
+print(r.status_code)
+
+# пример 2 GET запрос и получение Текста
+r = requests.get('https://baconipsum.com/api/?type=meat-and-filler')
+texts = json.loads(r.content)
+
+print(type(texts))
+
+for i in texts:
+    print(i[:50], '\n')
+
+пример 3 GET запрос и получение Словаря
+r = requests.get('https://api.github.com')
+d = json.loads(r.content)
+print(type(d))
+
+print(d['following_url'])
+
+Пример 4 POST запрос
+r = requests.post('https://httpbin.org/post', data={'key':'value'})
+print(r.content)
+print(r.status_code)
+
+Пример 5 POST JSON запрос
+data = {'key':'value'}
+
+r = requests.post('https://httpbin.org/post', json=json.dumps(data))
+print(r.content)
+print(r.status_code)
+
+# Задание 5.2.3
+# Напишите программу, которая отправляет запрос на генерацию случайных текстов
+# (используйте этот сервис). Выведите первый из сгенерированных текстов.
+r = requests.get('https://baconipsum.com/api/?type=meat-and-filler')
+print(r.content)
+print(r.status_code)
+texts = json.loads(r.content)
+print(type(texts))
+print(texts[0][:50], '......')
 
 
