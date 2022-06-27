@@ -3839,7 +3839,7 @@ import telebot
 #                  "group_chat_created", "supergroup_chat_created", "channel_chat_created", "migrate_to_chat_id",
 #                  "migrate_from_chat_id", "pinned_message"]
 
-TOKEN = "5490726294:AAHmVnYpilV8G3ob2EluzQjgdzKV_M1p_nc"
+TOKEN = "pwd"
 bot = telebot.TeleBot(TOKEN)
 
 
@@ -3961,4 +3961,95 @@ for _ in a:
     if str(_).find('s-link__muted') == -1:
         print(_.getText(), _.get('href'))
         
-        
+
+
+# КЭШ и кэширование с помощью RADIS в данном случае используеся облако REDIS.io
+# можно установить сервер redis локально
+
+import redis
+import json
+
+red = redis.Redis(
+    host = 'redis-16053.c274.us-east-1-3.ec2.cloud.redislabs.com',
+    port = 16053,
+    password = 'pwd'
+)
+
+red.set('var1', 'value1')
+print(red.get('var1'))
+red.delete('var1')
+print(red.get('var1'))
+
+dict1 = {'key1': 'value1', 'key2': 'value2'}
+print(type(json.dumps(dict1)))
+print(json.dumps(dict1))
+
+red.set('dict1', json.dumps(dict1))
+
+converted_dict = json.loads(red.get('dict1'))
+
+print(type(converted_dict))
+print(converted_dict)
+
+red.delete('dict1')
+print(red.get('dict1'))
+
+# Задание 5.5.4
+# Напишите программу, которая будет записывать и кэшировать номера телефонов ваших друзей.
+#
+# Программа должна уметь воспринимать несколько команд:
+#
+# записать номер;
+# показать номер друга в консоли при вводе имени;
+# удалить номер друга по имени.
+# Кэширование надо производить с помощью Redis. Ввод и вывод информации должен
+# быть реализован через консоль (с помощью функций input() и print()).
+
+import redis
+import json
+
+red = redis.Redis(
+    host = 'redis-16053.c274.us-east-1-3.ec2.cloud.redislabs.com',
+    port = 16053,
+    password = 'pwd'
+)
+
+cont = 'True'
+
+while cont:
+    action = input('Введите что нужно сделать (write / read / delete / stop): \t')
+    if action == 'write':
+        red.set(input('Введите имя: \n'), input('Введите телефон: \n'))
+    elif action == 'read':
+        print(red.get(input('Введите имя для поиска: \n')))
+    elif action == 'delete':
+        red.delete(input('Введите имя для удаления: \n'))
+    elif action == 'stop':
+        print('До свидания!')
+        break
+    else:
+        continue
+
+# вариант 2
+cont = True
+
+while cont:
+    action = input('action:\t')
+    if action == 'write':
+        name = input('name:\t')
+        phone = input('phone:\t')
+        red.set(name, phone)
+    elif action == 'read':
+        name = input('name:\t')
+        phone = red.get(name)
+        if phone:
+            print(f'{name}\'s phone is {str(phone)}')
+    elif action == 'delete':
+        name = input('name:\t')
+        phone = red.delete(name)
+        if phone:
+            print(f"{name}'s phone is deleted")
+        else:
+            print(f"Not found {name}")
+    elif action == 'stop':
+        break

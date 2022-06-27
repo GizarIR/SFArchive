@@ -6,7 +6,7 @@ import telebot
 #                  "group_chat_created", "supergroup_chat_created", "channel_chat_created", "migrate_to_chat_id",
 #                  "migrate_from_chat_id", "pinned_message"]
 
-TOKEN = "5490726294:AAHmVnYpilV8G3ob2EluzQjgdzKV_M1p_nc"
+TOKEN = "token"  #тут нужен токен с телеграмма
 bot = telebot.TeleBot(TOKEN)
 
 
