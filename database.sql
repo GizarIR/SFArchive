@@ -39,47 +39,37 @@ CREATE TABLE PRODUCTS_ORDERS(
 );
 
 
-
-/*Сущности для New Portal*/
+/*********************************************/
+/*Сущности для News Portal - NewsPaper project*/
 CREATE TABLE USERS(
     user_id INT AUTO_INCREMENT NOT NULL,
-    nic_name CHAR(255)
-    email CHAR(100) NOT NULL,
+    personal_email CHAR(100) NOT NULL,
     pwd CHAR(50) NOT NULL,
-    date_registr_u DATETIME NOT NULL,
-    date_del_u DATETIME NOT NULL,
+    full_name CHAR(255),
+    date_reg_u DATETIME NOT NULL,
+    date_reg_a DATETIME,
+    u_status CHAR(20),
 
     PRIMARY KEY (user_id)
 );
 
-CREATE TABLE AUTHORS(
-    author_id INT AUTO_INCREMENT NOT NULL,
-    first_name CHAR(255) NOT NULL,
-    second_name CHAR(255) NOT NULL,
-    user_portal INT NOT NULL,
-    date_reg_a DATETIME NOT NULL,
-
-    PRIMARY KEY (author_id),
-    FOREIGN KEY (user_portal) REFERENCES USERS (user_id)
-);
 
 CREATE TABLE ARTICLES(
     article_id INT AUTO_INCREMENT NOT NULL,
     header CHAR(255) NOT NULL,
     short_news CHAR(255) NOT NULL,
-    text_article TEXT,
+    article_text TEXT,
+    data_create DATETIME,
+    data_release DATETIME,
     a_status CHAR(20),
-    author INT NOT NULL,
 
     PRIMARY KEY (article_id),
-    FOREIGN KEY (author) REFERENCES AUTHORS (author_id)
-
 );
 
 CREATE TABLE COMMENTS(
     comment_id INT AUTO_INCREMENT NOT NULL,
     comment_text TEXT,
-    c_status CHAR(20),
+    data_create DATETIME,
     user_comment INT NOT NULL,
     article INT NOT NULL,
 
@@ -88,13 +78,13 @@ CREATE TABLE COMMENTS(
     FOREIGN KEY (user_comment) REFERENCES USERS (user_id)
 );
 
-CREATE TABLE ARTICLES_TABLE(
+CREATE TABLE ARTICLES_USERS(
     article_author_id INT AUTO_INCREMENT NOT NULL,
     author_article INT NOT NULL,
     on_article INT NOT NULL,
 
     PRIMARY KEY (article_author_id),
-    FOREIGN KEY (author_article) REFERENCES AUTHORS (author_id),
+    FOREIGN KEY (author_article) REFERENCES USERS (user_id),
     FOREIGN KEY (on_article) REFERENCES ARTICLES (article_id)
 );
 
